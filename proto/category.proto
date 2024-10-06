@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+option go_package = './pb';
+
+package category;
+
+import "common.proto";
+
+service CategoryService {
+  rpc FindCategories(FindCategoriesRequest) returns (FindCategoriesResponse) {}
+  rpc FindCategory(FindCategoryRequest) returns (FindCategoryResponse) {}
+  rpc SaveCategory(SaveCategoryRequest) returns (common.SaveRecordResponse) {}
+  rpc DeleteCategory(common.DeleteRecordRequest) returns (common.DeleteRecordResponse) {}
+}
+
+message Category {
+  // @import github.com/uptrace/bun
+  // @embed bun.BaseModel bun:"table:categories,alias:c"
+
+  int64 ID = 1; // bun:id,pk,autoincrement
+  int64 ParentID = 2;
+  string Name = 3;
+  string Slug = 4;
+  string Description = 5;
+  bool Active = 6;
+  int32 Order = 7;
+}
+
+message FindCategoriesFilters {
+  string keyword = 1;
+  optional int64 parentID = 2;
+  optional bool active = 3;
+}
+
+message FindCategoriesRequest {
+  FindCategoriesFilters filter = 1;
+  common.PaginationOptions paginate = 2;
+}
+
+message FindCategoriesResponse {
+  repeated Category data = 1;
+  common.PaginationResponse paging = 2;
+}
+
+message FindCategoryRequest {
+  optional int64 id = 1;
+  string slug = 2;
+  optional int64 parentID = 3;
+}
+
+message FindCategoryResponse {
+  Category data = 1;
+}
+
+message SaveCategoryRequest {
+  Category payload = 1;
+}

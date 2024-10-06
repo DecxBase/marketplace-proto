@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option go_package = './pb';
+
+package common;
+
+enum RECORD_ACTION_RESULT {
+  SUCCESS = 0;
+  FAILED = 1;
+  DENIED = 2;
+}
+
+message PaginationOptions {
+  optional int32 page = 1;
+  optional int32 per_page = 2;
+}
+
+message PaginationResponse {
+  int32 page = 1;
+  int32 pages = 2;
+  int32 per_page = 3;
+  int32 count = 4;
+  int32 total = 5;
+  bool has_prev = 6;
+  bool has_next = 7;
+}
+
+message SaveRecordResponse {
+  RECORD_ACTION_RESULT status = 1;
+}
+
+message DeleteRecordRequest {
+  optional int64 id = 1;
+}
+
+message DeleteRecordResponse {
+  RECORD_ACTION_RESULT status = 1;
+}

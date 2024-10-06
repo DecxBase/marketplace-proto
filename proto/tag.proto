@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option go_package = './pb';
+
+package tag;
+
+import "common.proto";
+
+service TagService {
+  rpc FindTags(FindTagsRequest) returns (FindTagsResponse) {}
+  rpc FindTag(FindTagRequest) returns (FindTagResponse) {}
+  rpc SaveTag(SaveTagRequest) returns (common.SaveRecordResponse) {}
+  rpc DeleteTag(common.DeleteRecordRequest) returns (common.DeleteRecordResponse) {}
+}
+
+message Tag {
+  // @import github.com/uptrace/bun
+  // @embed bun.BaseModel bun:"table:tags,alias:t"
+
+  int64 ID = 1; // bun:id,pk,autoincrement
+  string Name = 2;
+  string Slug = 3;
+  bool Active = 4;
+}
+
+message FindTagsFilters {
+  string keyword = 1;
+  optional bool active = 2;
+}
+
+message FindTagsRequest {
+  FindTagsFilters filter = 1;
+  common.PaginationOptions paginate = 2;
+}
+
+message FindTagsResponse {
+  repeated Tag data = 1;
+  common.PaginationResponse paging = 2;
+}
+
+message FindTagRequest {
+  optional int64 id = 1;
+  string slug = 2;
+}
+
+message FindTagResponse {
+  Tag data = 1;
+}
+
+message SaveTagRequest {
+  Tag payload = 1;
+}
